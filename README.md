@@ -25,7 +25,7 @@ python3 skype.py -u 帳號 -p 密碼
 	$ brew install chromedriver
 	```
 
-## Setup
+## ubuntu Setup
 
 ```
 $ pip3 install selenium
