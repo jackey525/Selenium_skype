@@ -28,8 +28,29 @@ python3 skype.py -u 帳號 -p 密碼
 ## Setup
 
 ```
-$ pip install selenium==3.8.0
+$ pip install selenium
 ```
+```
+如果 機器本身沒有 chrome ，請安裝google-chrome
+
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+```
+```
+機器本身已經安裝 chrome
+請查詢 chrome 版本
+
+進入此頁面選擇下載Chromedriver： 
+http://chromedriver.storage.googleapis.com/index.html
+
+下載並安裝
+
+$ wget http://chromedriver.storage.googleapis.com/83.0.4103.14/chromedriver_linux64.zip
+$ unzip chromedriver_linux64.zip
+$ chmod +x chromedriver
+$ sudo mv chromedriver /usr/bin/
+```
+
 
 ## Test run
 
