@@ -28,7 +28,7 @@ python3 skype.py -u 帳號 -p 密碼
 ## Setup
 
 ```
-$ pip install selenium
+$ pip3 install selenium
 ```
 ```
 如果 機器本身沒有 chrome ，請安裝google-chrome
