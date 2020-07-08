@@ -33,8 +33,9 @@ $ pip3 install selenium
 ```
 如果 機器本身沒有 chrome ，請安裝google-chrome
 
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo dpkg -i google-chrome-stable_current_amd64.deb
+$ sudo apt update
+
+$ sudo apt install google-chrome-stable
 ```
 ```
 機器本身已經安裝 chrome
