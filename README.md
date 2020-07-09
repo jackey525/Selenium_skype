@@ -3,7 +3,7 @@
 ## docker 執行
 
 ```
-$ git clone https://github.com/jackey525/Selenium_skyp.git
+$ git clone https://github.com/jackey525/Selenium_skype.git
 $ cd Selenium_skype
 $ docker run -it -v $(pwd):/usr/workspace joyzoursky/python-chromedriver:3.6-alpine3.7-selenium sh
 $ cd /usr/workspace
