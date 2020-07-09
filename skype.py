@@ -3,14 +3,22 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
-
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 
 driver = None
+
 
 def launch():
     print("Loading...")
     global driver
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+    # driver = webdriver.Chrome()
     driver.get('https://web.skype.com/')
     driver.set_window_size(1024, 768)
     print("Loaded Skype!")
