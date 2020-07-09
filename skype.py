@@ -55,7 +55,13 @@ def sendMessageToSelected(groupname,content):
     print(element_id)
     element.click()
     message = driver.find_element_by_xpath('//div[@aria-label="Type a message"]')
-    message.send_keys(content+ Keys.RETURN)
+    
+    arrContent = content.split('\n')
+    for str in arrContent:
+        message.send_keys(str)
+        message.send_keys(Keys.SHIFT,'\n')
+    
+    message.send_keys('\n')
 
 def main(args):
     try:
@@ -71,27 +77,27 @@ def main(args):
 
         group = "【Gtigaming例行维护通知】"
 
-        str = "【Gtigaming例行维护通知】 \r" \
-        +"Gtigaming游戏平台，本周三（07/08）进行维护 \r" \
-        +"维护时间：09:00~12:00（UTC + 8） \r" \
-        +"维护期间无法使用后台，载入游戏会显示维护讯息，请贵站于维护后再行访问，感谢您的支持〜"
+        str = '【Gtigaming例行维护通知】 \n' \
+        +'Gtigaming游戏平台，本周三（07/08）进行维护 \n' \
+        +'维护时间：09:00~12:00（UTC + 8） \n' \
+        +'维护期间无法使用后台，载入游戏会显示维护讯息，请贵站于维护后再行访问，感谢您的支持〜'
 
         time.sleep(5)
         sendMessageToSelected(group,str)
 
-        time.sleep(5)
-        group = "English"
-        str = "【Gtigaming Routine Maintenance】 \r" \
-        +"Date：07/01 Wednesday】 \r" \
-        +"Time：09:00 ~12:00 （UTC+8) \r" \
-        +"Gtigaming Platform Maintenance \r" \
-        +"Please ignore this msg, if not have the games above. \r" \
-        +"Please note that access of game sites and backend will be disabled during the maintenance.Thank you for kindly understanding."
-        sendMessageToSelected(group,str)
+        # time.sleep(5)
+        # group = "English"
+        # str = "【Gtigaming Routine Maintenance】 \r" \
+        # +"Date：07/01 Wednesday】 \r" \
+        # +"Time：09:00 ~12:00 （UTC+8) \r" \
+        # +"Gtigaming Platform Maintenance \r" \
+        # +"Please ignore this msg, if not have the games above. \r" \
+        # +"Please note that access of game sites and backend will be disabled during the maintenance.Thank you for kindly understanding."
+        # sendMessageToSelected(group,str)
     except:
         print("Something went wrong")
-    finally:
-        quit()
+    # finally:
+        # quit()
 
 if __name__ == "__main__":
     print("Starting up...")
