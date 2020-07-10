@@ -16,6 +16,7 @@ $ git clone https://github.com/jackey525/Selenium_skype.git
 $ cd Selenium_skype
 $ docker run -it -v $(pwd):/usr/workspace joyzoursky/python-chromedriver:3.6-alpine3.7-selenium sh
 $ cd /usr/workspace
+$ pip3 install requests
 $ python3 skype.py -u 帳號 -p 密碼
 ```
 ## 指令
@@ -47,6 +48,7 @@ python3 skype.py -u 帳號 -p 密碼
 
 ```
 $ pip3 install selenium
+$ pip3 install requests
 ```
 ```
 如果 機器本身沒有 chrome ，請安裝google-chrome
