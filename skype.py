@@ -159,7 +159,7 @@ def main(args):
             "chat_id": "-1001413107249",
             "text": "skype 通知客戶 佈署成功",
         }
-        r = requests.post("https://api.telegram.org/bot919145529:AAFI9y_zJZHLgrkgsUDt9FF6IflC_DbfMTU/sendMessage", metadata, headers={'Content-Type':'application/x-www-form-urlencoded', 'Accept': 'application/json'})        
+        r = requests.post("https://api.telegram.org/botxxxxxx:yyyyyyyyyyyyyyyyyyyyyyyyyy/sendMessage", metadata, headers={'Content-Type':'application/x-www-form-urlencoded', 'Accept': 'application/json'})        
 
     except:
         print("Something went wrong")
@@ -167,7 +167,7 @@ def main(args):
             "chat_id": "-1001413107249",
             "text": "skype 通知客戶 佈署失敗",
         }
-        r = requests.post("https://api.telegram.org/bot919145529:AAFI9y_zJZHLgrkgsUDt9FF6IflC_DbfMTU/sendMessage", metadata, headers={'Content-Type':'application/x-www-form-urlencoded', 'Accept': 'application/json'})
+        r = requests.post("https://api.telegram.org/botxxxxxx:yyyyyyyyyyyyyyyyyyyyyyyyyy/sendMessage", metadata, headers={'Content-Type':'application/x-www-form-urlencoded', 'Accept': 'application/json'})
 
     finally:
         quit()
