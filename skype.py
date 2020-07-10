@@ -1,5 +1,6 @@
 import argparse
 import time
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -48,28 +49,73 @@ def quit():
     driver.quit()
 
 def sendMessageToSelected(groupname,content):
-    print("Grouping!")
+    print(groupname+"Grouping!")
     # 搜尋開始
-    search = driver.find_element_by_xpath('//div[@data-text-as-pseudo-element="People, groups & messages"]')
-    time.sleep(2)
-    search.click()
-    time.sleep(2)
+    number = 0
+    while True:
+        number += 1
+        try:
+            if driver.find_element_by_xpath('//div[@data-text-as-pseudo-element="人員、群組與訊息"]').is_displayed():
+                driver.find_element_by_xpath('//div[@data-text-as-pseudo-element="人員、群組與訊息"]').click()
+                break
+        except:
+            print("沒有 人員、群組與訊息")
+            pass
+        print("找英文")
+        try:
+            if driver.find_element_by_xpath('//div[@data-text-as-pseudo-element="People, groups & messages"]').is_displayed():
+                driver.find_element_by_xpath('//div[@data-text-as-pseudo-element="People, groups & messages"]').click()
+                print("找到搜尋按鈕")
+                break
+        except:
+            if number > 10:
+                print("搜尋按鈕 失敗")
+                break
+            print("在找一次 搜尋按鈕")
+            time.sleep(2)
+            continue
+
+
+    time.sleep(1)
     # 搜尋群組
-    searchbar = driver.find_element_by_xpath('//input[@aria-label="Search Skype"]')
+    while True:
+        try:
+            if driver.find_element_by_xpath('//input[@aria-label="搜尋 Skype"]').is_displayed():
+                searchbar = driver.find_element_by_xpath('//input[@aria-label="搜尋 Skype"]')
+                break
+        except:
+            pass
+        
+        try:
+            if driver.find_element_by_xpath('//input[@aria-label="Search Skype"]').is_displayed():
+                searchbar = driver.find_element_by_xpath('//input[@aria-label="Search Skype"]')
+                print("開始搜尋")
+                break
+        except:
+            break
+
     searchbar.send_keys(groupname + Keys.RETURN)
-    time.sleep(2)
-    element = driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]')
-    element_id = element.get_attribute("id")
-    print(element_id)
-    element.click()
-    message = driver.find_element_by_xpath('//div[@aria-label="Type a message"]')
+    time.sleep(1)
+
+    try:
+        if driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').is_displayed():
+            element = driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').click()
+    except:
+        print("沒抓到群組   "+groupname)
+
+    # element = driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]')
+    # element_id = element.get_attribute("id")
+    # print(element_id)
     
+    # 輸入談話訊息
+    print("傳送訊息")
+    message = driver.find_element_by_xpath('//div[@aria-label="Type a message"]')
     arrContent = content.split('\n')
     for str in arrContent:
         message.send_keys(str)
         message.send_keys(Keys.SHIFT,'\n')
-    
     message.send_keys('\n')
+    print("傳送訊息結束")
 
 def main(args):
     try:
@@ -79,11 +125,21 @@ def main(args):
         signIn(args.username, args.password)
         time.sleep(10)
         # 前面遮蔽物
-        elem = driver.find_element_by_xpath('//button[@aria-label="Got it!"]')
-        if elem.is_displayed():
-            elem.click()
+        while True:
+            try:
+                if driver.find_element_by_xpath('//button[@aria-label="Got it!"]').is_displayed():
+                    driver.find_element_by_xpath('//button[@aria-label="Got it!"]').click()
+                    break
+            except:
+                print("Got it! error")    
+                break
 
-        group = "【Gtigaming例行维护通知】"
+        # group = "【Gtigaming例行维护通知】"
+
+        with open('./group/gtioo', 'r') as file:
+            groupArr = file.readlines()
+        print(groupArr)
+
 
         str = '【Gtigaming例行维护通知】 \n' \
         +'Gtigaming游戏平台，本周三（07/08）进行维护 \n' \
@@ -91,21 +147,30 @@ def main(args):
         +'维护期间无法使用后台，载入游戏会显示维护讯息，请贵站于维护后再行访问，感谢您的支持〜'
 
         time.sleep(5)
-        sendMessageToSelected(group,str)
+        for group in groupArr:
+            # 搜尋開始
+            groupname = group.replace('\n', '')
+            print("groupname is"+ groupname)
+            if groupname:
+                sendMessageToSelected(groupname,str)
+                time.sleep(10)
 
-        # time.sleep(5)
-        # group = "English"
-        # str = "【Gtigaming Routine Maintenance】 \r" \
-        # +"Date：07/01 Wednesday】 \r" \
-        # +"Time：09:00 ~12:00 （UTC+8) \r" \
-        # +"Gtigaming Platform Maintenance \r" \
-        # +"Please ignore this msg, if not have the games above. \r" \
-        # +"Please note that access of game sites and backend will be disabled during the maintenance.Thank you for kindly understanding."
-        # sendMessageToSelected(group,str)
+        metadata= {
+            "chat_id": "-1001413107249",
+            "text": "skype 通知客戶 佈署成功",
+        }
+        r = requests.post("https://api.telegram.org/bot919145529:AAFI9y_zJZHLgrkgsUDt9FF6IflC_DbfMTU/sendMessage", metadata, headers={'Content-Type':'application/x-www-form-urlencoded', 'Accept': 'application/json'})        
+
     except:
         print("Something went wrong")
-    # finally:
-        # quit()
+        metadata= {
+            "chat_id": "-1001413107249",
+            "text": "skype 通知客戶 佈署失敗",
+        }
+        r = requests.post("https://api.telegram.org/bot919145529:AAFI9y_zJZHLgrkgsUDt9FF6IflC_DbfMTU/sendMessage", metadata, headers={'Content-Type':'application/x-www-form-urlencoded', 'Accept': 'application/json'})
+
+    finally:
+        quit()
 
 if __name__ == "__main__":
     print("Starting up...")
