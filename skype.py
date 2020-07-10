@@ -14,10 +14,10 @@ def launch():
     print("Loading...")
     global driver
     chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--disable-dev-shm-usage')
+    # chrome_options.add_argument('--headless')
+    # chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(chrome_options=chrome_options)
     # driver = webdriver.Chrome()
     driver.get('https://web.skype.com/')
@@ -41,6 +41,19 @@ def signIn(userName, password):
     time.sleep(2)
     idSIButton99 = driver.find_element_by_id("idSIButton9")
     idSIButton99.submit()
+    
+    time.sleep(5)
+    while True:
+        try:
+            if driver.find_element_by_id("passwordError").is_displayed():
+                print("Signed In error!")
+                raise EOFError
+                break
+        except EOFError:
+            print('got it')
+            raise
+        except:
+            break
 
     print("Signed In!")
 
@@ -72,6 +85,17 @@ def sendMessageToSelected(groupname,content):
                 print("搜尋按鈕 失敗")
                 break
             print("在找一次 搜尋按鈕")
+            
+            # 可能前面有遮蔽物  去除
+            while True:
+                try:
+                    if driver.find_element_by_xpath('//button[@aria-label="Got it!"]').is_displayed():
+                        driver.find_element_by_xpath('//button[@aria-label="Got it!"]').click()
+                        break
+                except:
+                    print("Got it!")    
+                    break
+            
             time.sleep(2)
             continue
 
@@ -95,13 +119,30 @@ def sendMessageToSelected(groupname,content):
             break
 
     searchbar.send_keys(groupname + Keys.RETURN)
-    time.sleep(1)
+    time.sleep(3)
 
+    
     try:
         if driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').is_displayed():
-            element = driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').click()
+            driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').click()
     except:
-        print("沒抓到群組   "+groupname)
+        print("沒抓到群組="+groupname)
+        str_split = groupname.split("-", 1)
+        print("重新搜尋群組="+str_split[0])
+        searchbar.clear()
+        time.sleep(1)
+        searchbar.send_keys(str_split[0] + Keys.RETURN)
+        time.sleep(3)
+        try:
+            if driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]//div[@data-text-as-pseudo-element="MORE"]').is_displayed():
+                driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]//div[@data-text-as-pseudo-element="MORE"]').click()
+                time.sleep(2)
+                print("塞選抓群組="+groupname)
+                driver.find_element_by_xpath('//div[@aria-label="'+groupname+', "]').click()
+        except:
+            print("塞選抓群組="+groupname)
+            driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').click()
+        
 
     # element = driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]')
     # element_id = element.get_attribute("id")
@@ -123,7 +164,7 @@ def main(args):
         args = parser.parse_args()
         print(args.username)
         signIn(args.username, args.password)
-        time.sleep(10)
+        time.sleep(5)
         # 前面遮蔽物
         while True:
             try:
