@@ -8,16 +8,16 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 
 driver = None
-
+lang = 1
 
 def launch():
     print("Loading...")
     global driver
     chrome_options = Options()
-    # chrome_options.add_argument('--headless')
-    # chrome_options.add_argument('--no-sandbox')
-    # chrome_options.add_argument('--disable-gpu')
-    # chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(chrome_options=chrome_options)
     # driver = webdriver.Chrome()
     driver.get('https://web.skype.com/')
@@ -56,7 +56,6 @@ def signIn(userName, password):
             break
 
     print("Signed In!")
-
 def quit():
     print("Quitting...")
     driver.quit()
@@ -99,8 +98,6 @@ def sendMessageToSelected(groupname,content):
             time.sleep(2)
             continue
 
-
-    time.sleep(1)
     # 搜尋群組
     while True:
         try:
@@ -117,32 +114,31 @@ def sendMessageToSelected(groupname,content):
                 break
         except:
             break
-
+    # 開始全字檢索
     searchbar.send_keys(groupname + Keys.RETURN)
-    time.sleep(3)
-
+    time.sleep(5)
+    # 點 Group 的 tab
+    driver.find_element_by_xpath('//button[@aria-label="Groups"]').click()
     
     try:
-        if driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').is_displayed():
-            driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').click()
+        if driver.find_element_by_xpath('//div[@role="presentation"]//div[contains(@aria-label,"'+groupname+'")]').is_displayed():
+            driver.find_element_by_xpath('//div[@role="presentation"]//div[contains(@aria-label,"'+groupname+'")]').click()
     except:
         print("沒抓到群組="+groupname)
         str_split = groupname.split("-", 1)
         print("重新搜尋群組="+str_split[0])
         searchbar.clear()
-        time.sleep(1)
+        time.sleep(2)
+        # 開始前綴字字檢索
         searchbar.send_keys(str_split[0] + Keys.RETURN)
         time.sleep(3)
         try:
-            if driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]//div[@data-text-as-pseudo-element="MORE"]').is_displayed():
-                driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]//div[@data-text-as-pseudo-element="MORE"]').click()
-                time.sleep(2)
+            if driver.find_element_by_xpath('//div[@role="presentation"]//div[contains(@aria-label,"'+groupname+'")]').is_displayed():
+                driver.find_element_by_xpath('//div[@role="presentation"]//div[contains(@aria-label,"'+groupname+'")]').click()
                 print("塞選抓群組="+groupname)
-                driver.find_element_by_xpath('//div[@aria-label="'+groupname+', "]').click()
+                time.sleep(5)
         except:
-            print("塞選抓群組="+groupname)
-            driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]').click()
-        
+            print("再次沒抓到群組="+groupname)
 
     # element = driver.find_element_by_xpath('//div[@aria-label="GROUP CHATS"]/div[contains(@aria-label,"'+groupname+'")]')
     # element_id = element.get_attribute("id")
